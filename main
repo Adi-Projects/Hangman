@@ -1,0 +1,168 @@
+'''
+TODO: 
+    1. Create a function that checks if the word is complete and display a winning message.
+    2. Try to incorporate the animation into the output.
+
+    _____
+    |   |
+    |   O
+    |  /|\
+    |  /^\
+
+'''
+import random
+from os import system
+
+# The function opens a file with words and selects a random one.
+def select_word():
+    #words_file = __file__[:__file__.rfind('/')] + '/words.txt'  # Take currently executed file's path, trim it up to the lant '/' and add the files name.
+    # print(words_file)
+    try: 
+        stream = open('words.txt', 'rt')
+        word_list = [line for line in stream]
+        word = word_list[random.randint(0,49)].lower()
+        word = word[0:-1]   # Strips the \n character.
+        guesses = select_difficulty(word)
+        stream.close()
+        return word, guesses
+    except OSError as exc:
+        print(f'An error has occured: {exc}')
+
+    
+
+
+# This function lets the player select a difficulty level (harder = less guesses)
+# Executed by 'select_word' and returns an integer representing the amount of available guesses.
+def select_difficulty(word):
+    print(
+        '''
+        The dificulty mechanism works in the following way:\n
+        \tEasy - Guesses amount is three times the word's length.\n
+        \tMedium - Guesses amount is twice the word's length.\n
+        \tHard - Guesses amount is two characters larger than the word's length.
+        ''')
+    
+    guesses = 0
+
+    while True: # The loop sets the amount of guesses available according to the difficulty leve.
+
+        difficulty = input('Please select the prefered dificulty level: ').lower()
+        if difficulty == 'easy':
+            guesses = len(word) * 3
+            break
+        elif difficulty == 'medium':
+            guesses = len(word) * 2
+            break
+        elif difficulty == 'hard':
+            guesses = len(word) + 2
+            break
+        else:
+            print('Unknown dificulty was selected, please try again.')
+    system('cls')
+    print(f'The dificulty is set to: {difficulty}\nYou have {guesses} guesses')
+    return guesses
+
+
+# This function builds the guesses buffer that will be filled as the player progresses.
+# The guesses buffer is represented by a list filled with _ to display an empty space.
+def set_guess_buffer(guesses):
+    buffer = []
+    for index in range(guesses):
+        buffer.append('_')
+    
+    return buffer
+
+
+# This function creates the board of the selected word.
+# The board is built similarly to the guesses buffer.
+def word_to_guess(word):
+    buffer = []
+    for i in range(len(word)):
+        buffer.append('_')
+    
+    return buffer
+
+
+# The function lets a player select a character and saves it in a list if not already used.
+# It also verifies that the character is only a letter!
+def guess_character(guess_buffer, guess_word, word):  
+    char = ''
+    guess_buffer = guess_buffer
+    guess_word = guess_word
+    control = True
+    while control:
+        char = input('\nPlease type your guess character: ').lower()
+        if len(char) == 1 and char.isalpha():
+            if char not in guess_buffer:
+                is_in_word(word, char, guess_buffer, guess_word)  
+            else:
+                print('\nThis character was already used!')
+        else:
+            print('\nThe selected character must be only one letter!')
+
+        control = check_game_status(guess_word, guess_buffer)
+    
+
+
+# This function perform the check for characters in the word and populates the guess buffer and the guess word.
+def is_in_word(word, char, guess_buffer, guess_word):
+    system('cls')
+    if char in word:
+        for index in range(len(word)):
+            if char == word[index]:  
+                guess_word[index] = char
+        print(f'\nThe letter exists!')
+    else:
+        print('\nThe character dont exist')
+        
+    guess_buffer[guess_buffer.index('_')] = char
+    print(f'Used characters: {guess_buffer}\nThe word: {guess_word}')
+
+
+
+# This function controlls the flow of the game.
+# It is invoked from 'guess_character' and returns a boolean value.
+# If the value is true, the game continues.
+def check_game_status(guess_word, guess_buffer):
+    if '_' not in guess_word:
+        print("You are the winner!")
+        return False
+    elif '_' not in guess_buffer:
+        print('No more guesses left ya looser')
+        return False
+    else:
+        return True
+
+
+
+# The function that starts it all!
+def play():
+
+    print(
+        """
+        Welcome to the Hangman game!\n
+        The rules are simple....and not gonna be specified....I hope you had a childhood!\n
+        If you aren't familiar with the game ... google it!\n
+        Are you ready to be hanged!??!\n
+        The game has started!
+        """)
+        
+    word, guesses = select_word()
+    guess_buffer = set_guess_buffer(guesses)
+    print(f'Your guesses board: {guess_buffer}')
+    guess_word = word_to_guess(word)
+    print(f'The word to guess: {guess_word}')
+    guess_character(guess_buffer, guess_word, word)
+
+  
+if __name__ == "__main__":
+    play()
+
+
+
+
+
+
+    
+    
+
