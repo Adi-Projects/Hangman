@@ -27,9 +27,7 @@ def select_word():
         return word, guesses
     except OSError as exc:
         print(f'An error has occured: {exc}')
-
-    
-
+        
 
 # This function lets the player select a difficulty level (harder = less guesses)
 # Executed by 'select_word' and returns an integer representing the amount of available guesses.
@@ -103,7 +101,6 @@ def guess_character(guess_buffer, guess_word, word):
         control = check_game_status(guess_word, guess_buffer)
     
 
-
 # This function perform the check for characters in the word and populates the guess buffer and the guess word.
 def is_in_word(word, char, guess_buffer, guess_word):
     system('cls')
@@ -119,7 +116,6 @@ def is_in_word(word, char, guess_buffer, guess_word):
     print(f'Used characters: {guess_buffer}\nThe word: {guess_word}')
 
 
-
 # This function controlls the flow of the game.
 # It is invoked from 'guess_character' and returns a boolean value.
 # If the value is true, the game continues.
@@ -132,7 +128,6 @@ def check_game_status(guess_word, guess_buffer):
         return False
     else:
         return True
-
 
 
 # The function that starts it all!
@@ -157,12 +152,3 @@ def play():
   
 if __name__ == "__main__":
     play()
-
-
-
-
-
-
-    
-    
-
